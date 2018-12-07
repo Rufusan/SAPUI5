@@ -87,7 +87,10 @@
 				{
 					"pattern": "",
 					"name": "master",
-					"target": "master"
+					"target": [
+						"object",
+						"master"
+					]
 				},
 				{
 					"pattern": "BusinessPartnerSet/{objectId}",
@@ -99,11 +102,10 @@
 					"greedy": false
 				},
 				{
-					"pattern": "SalesOrderSet/{salesId}",
+					"pattern": "SalesOrderSet/{objectId}",
 					"name": "sales",
 					"target": [
 						"master",
-						"object",
 						"sales"
 					]
 				}
@@ -123,7 +125,7 @@
 				"sales": {
 					"viewName": "Sales",
 					"viewId": "sales",
-					"viewLevel": 2,
+					"viewLevel": 3,
 					"controlAggregation": "midColumnPages"
 				},
 				"detailObjectNotFound": {

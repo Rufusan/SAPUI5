@@ -14,7 +14,7 @@ sap.ui.define([
 				oViewModel = new JSONModel({
 					busy : true,
 					delay : 0,
-					layout : "OneColumn",
+					layout : "TwoColumnsMidExpanded",
 					previousLayout : "",
 					actionButtonsInfo : {
 						midColumn : {
@@ -35,8 +35,6 @@ sap.ui.define([
 
 				// apply content density mode to root view
 				this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
-				
-				oApplication = this.getView().byId("app"); 
 			}
 
 		});

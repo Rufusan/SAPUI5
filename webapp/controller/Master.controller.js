@@ -57,8 +57,6 @@ sap.ui.define([
 
 				this.getRouter().getRoute("master").attachPatternMatched(this._onMasterMatched, this);
 				this.getRouter().attachBypassed(this.onBypassed, this);
-				
-				oApplication = this.getView().byId("masterPage"); 
 			},
 
 			/* =========================================================== */
@@ -167,11 +165,13 @@ sap.ui.define([
 			 * @public
 			 */
 			onSelectionChange : function (oEvent) {
+				debugger;
 				var oList = oEvent.getSource(),
 					bSelected = oEvent.getParameter("selected");
 
 				// skip navigation when deselecting an item in multi selection mode
-				if (!(oList.getMode() === "MultiSelect" && !bSelected)) {
+				//if (!(oList.getMode() === "MultiSelect" && !bSelected)) {
+				if (!(oList.getMode() === "MultiSelect" )) {
 					// get the list item, either from the listItem parameter or from the event's source itself (will depend on the device-dependent mode).
 					this._showDetail(oEvent.getParameter("listItem") || oEvent.getSource());
 				}
@@ -228,9 +228,21 @@ sap.ui.define([
 			},
 
 			_onMasterMatched :  function() {
-				//Set the layout property of the FCL control to 'TwoColumnsMidExpanded'
-				//this.getModel("appView").setProperty("/layout", "TwoColumnsMidExpanded");
-				this.getModel("appView").setProperty("/layout", "OneColumn");
+				this.getOwnerComponent().oListSelector.oWhenListLoadingIsDone.then(
+					function (mParams) {
+						if (mParams.list.getMode() === "None") {
+							return;
+						}
+						var sObjectId = this.getView().byId("list").getItems()[0].getBindingContext().getProperty("BusinessPartnerID");
+						this.getRouter().navTo("object", {objectId : sObjectId}, true);
+					}.bind(this),
+					function (mParams) {
+						if (mParams.error) {
+							return;
+						}
+						this.getRouter().getTargets().display("detailNoObjectsAvailable");
+					}.bind(this)
+				);
 			},
 
 			/**
@@ -240,9 +252,8 @@ sap.ui.define([
 			 * @private
 			 */
 			_showDetail : function (oItem) {
-				var bReplace = !Device.system.phone;
-				// set the layout property of FCL control to show two columns
 				this.getModel("appView").setProperty("/layout", "TwoColumnsMidExpanded");
+				var bReplace = !Device.system.phone;
 				this.getRouter().navTo("object", {
 					objectId : oItem.getBindingContext().getProperty("BusinessPartnerID")
 				}, bReplace);

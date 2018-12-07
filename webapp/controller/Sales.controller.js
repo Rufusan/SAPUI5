@@ -79,7 +79,7 @@ sap.ui.define([
 			 * @private
 			 */
 			_onObjectMatched : function (oEvent) {
-				var sObjectId =  oEvent.getParameter("arguments").salesId;
+				var sObjectId =  oEvent.getParameter("arguments").objectId;
 				this.getModel().metadataLoaded().then(function() {
 					var sObjectPath = this.getModel().createKey("SalesOrderSet", {
 						SalesOrderID: sObjectId
@@ -119,7 +119,6 @@ sap.ui.define([
 			_onBindingChange : function () {
 				var oView = this.getView(),
 					oElementBinding = oView.getElementBinding();
-
 				// No data for the binding
 				if (!oElementBinding.getBoundContext()) {
 					this.getRouter().getTargets().display("detailObjectNotFound");
@@ -144,7 +143,7 @@ sap.ui.define([
 					oResourceBundle.getText("shareSendEmailObjectMessage", [sObjectName, sObjectId, location.href]));
 			},
 
-			/*_onMetadataLoaded : function () {
+			_onMetadataLoaded : function () {
 				// Store original busy indicator delay for the detail view
 				var iOriginalViewBusyDelay = this.getView().getBusyIndicatorDelay(),
 					oViewModel = this.getModel("salesView"),
@@ -166,7 +165,7 @@ sap.ui.define([
 				// Restore original busy indicator delay for the detail view
 				oViewModel.setProperty("/delay", iOriginalViewBusyDelay);
 			
-			},*/
+			},
 
 			/**
 		    * Closes sales details view and navigates back to the sales orders
@@ -174,12 +173,16 @@ sap.ui.define([
 			onCloseSales: function () {
 				var oHistory = History.getInstance();
 				var sPreviousHash = oHistory.getPreviousHash();
+				var oView = this.getModel("appView");
 	
 				if (sPreviousHash !== undefined) {
 					window.history.go(-1);
 				} else {
-					var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-					oRouter.navTo("object", true);
+					oView.setProperty("/actionButtonsInfo/midColumn/fullScreen", false);
+					oView.setProperty("/layout", "OneColumn");
+				
+					this.getOwnerComponent().oListSelector.clearMasterListSelection();
+				    //this.getRouter().navTo("master");
 				}
 			},
 			/**

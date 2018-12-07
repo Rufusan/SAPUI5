@@ -23,7 +23,6 @@ sap.ui.define([
 					delay : 0,
 					lineItemListTitle : this.getResourceBundle().getText("detailLineItemTableHeading")
 				});
-
 				this.getRouter().getRoute("object").attachPatternMatched(this._onObjectMatched, this);
 				this.setModel(oViewModel, "detailView");
 				this.getOwnerComponent().getModel().metadataLoaded().then(this._onMetadataLoaded.bind(this));
@@ -54,7 +53,7 @@ sap.ui.define([
 			                    position: results[0].geometry.location
 			                });
 			            } else {
-			                alert('Geocode was not successful for the following reason: ' + status);
+			                console.log('Geocode was not successful for the following reason: ' + status);
 			            }
 			        });
 		    	//}
@@ -151,7 +150,7 @@ sap.ui.define([
 			},
 
 			_onBindingChange : function () {
-				if(this.getView().byId("partnerDetails").getProperty('expanded') === true){
+				if (this.getView().byId("partnerDetails").getProperty('expanded') === true){
 					this.getView().byId("partnerDetails").setProperty('expanded', false);
 				}
 				var oView = this.getView(),
@@ -209,16 +208,19 @@ sap.ui.define([
 				var oItem = oEvent.getSource();
 
 				this.getRouter().navTo("sales", {
-					salesId: oItem.getBindingContext().getProperty("SalesOrderID")
+					objectId: oItem.getBindingContext().getProperty("SalesOrderID")
 				}); 	
 			},
 			/**
 			* Set the full screen mode to false and navigate to master page
 			*/
 			onCloseDetailPress: function () {
-				this.getModel("appView").setProperty("/actionButtonsInfo/midColumn/fullScreen", false);
+				var oView = this.getModel("appView");
+				oView.setProperty("/actionButtonsInfo/midColumn/fullScreen", false);
+				oView.setProperty("/layout", "OneColumn");
+				
 				this.getOwnerComponent().oListSelector.clearMasterListSelection();
-				this.getRouter().navTo("master");
+				//this.getRouter().navTo("master");
 			},
 
 			/**
