@@ -165,7 +165,6 @@ sap.ui.define([
 			 * @public
 			 */
 			onSelectionChange : function (oEvent) {
-				debugger;
 				var oList = oEvent.getSource(),
 					bSelected = oEvent.getParameter("selected");
 
